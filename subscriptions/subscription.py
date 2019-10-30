@@ -82,5 +82,17 @@ class Subscription:
             print ("Returning from cache : " + cache_key)
         return response
 
+    def get_subscriptions(self,subscription_id):
+        cache_key = "zoho_subscriptions_by_customer_%s" % subscription_id
+        response = self.client.get_from_cache(cache_key)
+        if response is None:
+            subscriptions_by_subscription_id_uri = 'subscriptions/%s'%subscription_id
+            result = self.client.send_request("GET", subscriptions_by_subscription_id_uri)
+            response = result['subscription']
+            self.client.add_to_cache(cache_key, response)
+        else:
+            print("Returning from cache : " + cache_key)
+
+
 
 
