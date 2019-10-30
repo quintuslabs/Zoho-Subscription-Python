@@ -25,20 +25,7 @@ class Invoice:
         else:
             self.client = Client(config)
 
-    def plan(self):
-        return Plan(self.client)
 
-    def customer(self):
-        return Customer(self.client)
-
-    def add_on(self):
-        return Addon(self.client)
-
-    def invoice(self):
-        return Invoice(self.client)
-
-    def hosted_page(self):
-        return HostedPage(self.client)
 
     def list_invoices_by_customer(self,customer_id):
         cache_key = "zoho_invoices_%s" % customer_id
