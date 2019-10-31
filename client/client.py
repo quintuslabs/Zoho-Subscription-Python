@@ -52,9 +52,8 @@ class Client:
             'Content-Type': "application/json"
         }
         if (headers is not None) and len(headers) > 0:
-            return dict(default_headers.items() + headers.items())
-        else:
-            return default_headers
+            default_headers.update(headers)
+        return default_headers
 
     def send_request(self, method, uri, data=None, headers=None):
         try:

@@ -56,11 +56,11 @@ class Subscription:
         return response
 
     def create(self, data):
-        return self.client.send_request("POST", 'subscriptions', data=json.dumps(data), headers=None)
+        return self.client.send_request("POST", 'subscriptions', data=data, headers=None)
 
     def buy_add_on(self, subscription_id, data):
         buy_add_on_uri = 'subscriptions/%s/buyonetimeaddon' % subscription_id
-        return self.client.send_request("POST", buy_add_on_uri, data=json.dumps(data), headers=None)
+        return self.client.send_request("POST", buy_add_on_uri, data=data, headers=None)
 
     def associate_coupon(self, subscription_id, coupon_code):
         coupon_uri = 'subscriptions/%s/coupons/%s' % (subscription_id, coupon_code)
