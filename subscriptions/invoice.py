@@ -57,6 +57,5 @@ class Invoice:
         data = {'query':{'accept':'pdf'}}
         invoice_pdf_by_invoice_id_uri = 'invoices/%s'%invoice_id
         headers = {"Accept" : "application/pdf"}
-
         return self.client.send_request("GET", invoice_pdf_by_invoice_id_uri,data=data, headers=headers)
 

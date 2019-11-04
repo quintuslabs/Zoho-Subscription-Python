@@ -40,6 +40,7 @@ class Client:
                 return None
 
     def delete_from_cache(self, key):
+
         if (self.cache_enabled is None) or (self.cache_enabled is False):
             return None
         else:
@@ -62,7 +63,7 @@ class Client:
             response.raise_for_status()
 
         except HTTPError as http_err:
-            return None
+            return http_err
         except Exception as err:
             return None
         else:
