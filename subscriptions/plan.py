@@ -62,19 +62,6 @@ class Plan:
 
         return response
 
-    def get_price_by_plan_code(self, plan_code):
-        cache_key = 'plan_%s' % plan_code
-        response = self.client.get_from_cache(cache_key)
-        if response is None:
-            plan_by_plan_code = 'plans/%s' % plan_code
-            result = self.client.send_request("GET", plan_by_plan_code)
-            response = result['plan']
-            self.client.add_to_cache(cache_key, response)
-        else:
-            print("Returning from cache : " + cache_key)
-        recurring_price = response['recurring_price']
-        return recurring_price
-
     def get_addons_for_plan(self,plan_code):
         cache_key = 'plans'
         addon_code_list = []
@@ -90,10 +77,25 @@ class Plan:
                     if each_plan.get("addons"):
                         if each_plan.get('plan_code')== plan_code:
                             for each_addon_code in each_plan["addons"]:
-                                addon_code_list.append(self.addon.get_addon(each_addon_code['addon_code']))
+                                addon_code_list.append(addon.get_addon(each_addon_code['addon_code']))
                 return addon_code_list
             else:
                 print("Returning from cache : " + cache_key)
+
+    # Filter Plan
+
+    def get_price_by_plan_code(self, plan_code):
+        cache_key = 'plan_%s' % plan_code
+        response = self.client.get_from_cache(cache_key)
+        if response is None:
+            plan_by_plan_code = 'plans/%s' % plan_code
+            result = self.client.send_request("GET", plan_by_plan_code)
+            response = result['plan']
+            self.client.add_to_cache(cache_key, response)
+        else:
+            print("Returning from cache : " + cache_key)
+        recurring_price = response['recurring_price']
+        return recurring_price
 
 
 

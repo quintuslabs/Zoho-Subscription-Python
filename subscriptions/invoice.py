@@ -17,15 +17,13 @@ except ImportError:
     except ImportError:
         print("Zoho configurations not found in config/django settings, must be passed while initializing")
 
-class Invoice:
 
+class Invoice:
     def __init__(self, config=None):
         if config is None:
             self.client = Client(configuration.ZOHO_SUBSCRIPTION_CONFIG)
         else:
             self.client = Client(config)
-
-
 
     def list_invoices_by_customer(self,customer_id):
         cache_key = "zoho_invoices_%s" % customer_id
@@ -53,9 +51,8 @@ class Invoice:
         return response
 
     def get_invoice_pdf(self,invoice_id):
-
         data = {'query':{'accept':'pdf'}}
         invoice_pdf_by_invoice_id_uri = 'invoices/%s'%invoice_id
-        headers = {"Accept" : "application/pdf"}
+        headers = {"Accept": "application/pdf"}
         return self.client.send_request("GET", invoice_pdf_by_invoice_id_uri,data=data, headers=headers)
 

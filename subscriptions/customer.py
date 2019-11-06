@@ -66,7 +66,7 @@ class Customer:
         response = self.client.get_from_cache(cache_key)
         headers = {'Content-type': 'application/json'}
         update_customer_by_customer_id = 'customers/%s' % customer_id
-        result = self.client.send_request("PUT", update_customer_by_customer_id,data=data,headers=headers)
+        result = self.client.send_request("PUT", update_customer_by_customer_id, data=data, headers=headers)
         if result['code'] == 0:
             customer_val = result['customer']
             response = self.delete_customer_cache(customer_val)
