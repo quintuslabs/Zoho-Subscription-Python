@@ -1,5 +1,7 @@
 import json
 
+from requests import HTTPError
+
 from client.client import Client
 from subscriptions.addon import Addon
 from subscriptions.customer import Customer
@@ -88,10 +90,14 @@ class Subscription:
         if response is None:
             subscriptions_by_subscription_id_uri = 'subscriptions/%s'%subscription_id
             result = self.client.send_request("GET", subscriptions_by_subscription_id_uri)
-            response = result['subscription']
-            self.client.add_to_cache(cache_key, response)
+            if type(result) is HTTPError:
+                response = None
+            else:
+                response = result['subscription']
+                self.client.add_to_cache(cache_key, response)
         else:
             print("Returning from cache : " + cache_key)
+        return response
 
 
 

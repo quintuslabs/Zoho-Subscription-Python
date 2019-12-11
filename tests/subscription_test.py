@@ -9,4 +9,4 @@ ZOHO_SUBSCRIPTION_CONFIG = {
 subscriptions = Subscription(ZOHO_SUBSCRIPTION_CONFIG)
 
 # print(subscriptions.list_subscriptions_by_customer("2004477000000071072"))
-print (subscriptions.get_subscriptions("2004477000000071085"))
+print (subscriptions.get_subscriptions("100"))
