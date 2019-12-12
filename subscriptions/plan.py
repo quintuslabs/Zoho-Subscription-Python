@@ -1,5 +1,7 @@
 import json
 
+from requests import HTTPError
+
 from client.client import Client
 from subscriptions import addon
 from subscriptions.addon import Addon
@@ -55,8 +57,11 @@ class Plan:
         if response is None:
             plan_by_plan_code = 'plans/%s' % plan_code
             result = self.client.send_request("GET", plan_by_plan_code)
-            response = result['plan']
-            self.client.add_to_cache(cache_key, response)
+            if type(result) is HTTPError:
+                response = None
+            else:
+                response = result['plan']
+                self.client.add_to_cache(cache_key, response)
         else:
             print("Returning from cache : " + cache_key)
 
@@ -90,12 +95,16 @@ class Plan:
         if response is None:
             plan_by_plan_code = 'plans/%s' % plan_code
             result = self.client.send_request("GET", plan_by_plan_code)
-            response = result['plan']
-            self.client.add_to_cache(cache_key, response)
+            if type(result) is HTTPError:
+                response = None
+            else:
+                response = result['plan']
+                self.client.add_to_cache(cache_key, response)
+                recurring_price = response['recurring_price']
+                return recurring_price
         else:
             print("Returning from cache : " + cache_key)
-        recurring_price = response['recurring_price']
-        return recurring_price
+        return response
 
 
 
