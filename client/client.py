@@ -42,9 +42,13 @@ class Client:
 
     def delete_from_cache(self, key):
         if (self.cache_enabled is None) or (self.cache_enabled is False):
-            return None
+            return False
         else:
-            return self.cache.pop(key=key)
+            try:
+                self.cache.pop(key=key)
+                return True
+            except KeyError:
+                return False
             # my_key = ast.literal_eval(key)
             # return self.cache.pop(key=key)
 

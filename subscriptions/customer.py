@@ -72,7 +72,6 @@ class Customer:
 
     def update_customer(self, customer_id, data):
         cache_key = 'zoho_customer_%s' % customer_id
-        response = self.client.get_from_cache(cache_key)
         headers = {'Content-type': 'application/json'}
         update_customer_by_customer_id = 'customers/%s' % customer_id
         result = self.client.send_request("PUT", update_customer_by_customer_id, data=data, headers=headers)
@@ -82,13 +81,12 @@ class Customer:
             return result_dict['message']
         if result['code'] == 0:
             customer_val = result['customer']
-            response = self.delete_customer_cache(customer_val)
-            return response
+            self.delete_customer_cache(cache_key)
+            return customer_val
         else:
-            return response
+            return None
 
-    def delete_customer_cache(self, customer_val):
-        cache_key_by_id = 'zoho_customer_%s' % customer_val['customer_id']
+    def delete_customer_cache(self, cache_key_by_id):
         result = self.client.delete_from_cache(cache_key_by_id)
         return result
 
