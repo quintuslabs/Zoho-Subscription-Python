@@ -1,3 +1,4 @@
+import ast
 import json
 
 import requests
@@ -40,11 +41,12 @@ class Client:
                 return None
 
     def delete_from_cache(self, key):
-
         if (self.cache_enabled is None) or (self.cache_enabled is False):
             return None
         else:
             return self.cache.pop(key=key)
+            # my_key = ast.literal_eval(key)
+            # return self.cache.pop(key=key)
 
     def get_request_headers(self, headers):
         default_headers = {
@@ -66,5 +68,8 @@ class Client:
             return http_err
         except Exception as err:
             return None
-        else:
+        if response.headers['Content-Type'] == 'application/json;charset=UTF-8':
             return json.loads(response.text)
+        else:
+            return response.content
+

@@ -1,3 +1,4 @@
+import ast
 import json
 
 from requests import HTTPError
@@ -58,7 +59,9 @@ class Plan:
             plan_by_plan_code = 'plans/%s' % plan_code
             result = self.client.send_request("GET", plan_by_plan_code)
             if type(result) is HTTPError:
-                response = None
+                result_bytes = result.response._content
+                result_dict = ast.literal_eval(result_bytes.decode('utf-8'))
+                return result_dict['message']
             else:
                 response = result['plan']
                 self.client.add_to_cache(cache_key, response)
@@ -96,7 +99,9 @@ class Plan:
             plan_by_plan_code = 'plans/%s' % plan_code
             result = self.client.send_request("GET", plan_by_plan_code)
             if type(result) is HTTPError:
-                response = None
+                result_bytes = result.response._content
+                result_dict = ast.literal_eval(result_bytes.decode('utf-8'))
+                return result_dict['message']
             else:
                 response = result['plan']
                 self.client.add_to_cache(cache_key, response)

@@ -1,3 +1,7 @@
+import ast
+
+from requests import HTTPError
+
 from client.client import Client
 
 try:
@@ -40,14 +44,19 @@ class Addon:
 
         return response
 
-    def get_addon(self, addon_code):
+    def get_addon(self, addon_code=None):
         cache_key = 'addon_%s' % addon_code
         response = self.client.get_from_cache(cache_key)
         if response is None:
             addon_by_addon_code = 'addons/%s' % addon_code
             result = self.client.send_request("GET", addon_by_addon_code)
-            response = result['addon']
-            self.client.add_to_cache(cache_key, response)
+            if type(result) is HTTPError:
+                result_bytes = result.response._content
+                result_dict = ast.literal_eval(result_bytes.decode('utf-8'))
+                return result_dict['message']
+            else:
+                response = result['addon']
+                self.client.add_to_cache(cache_key, response)
         else:
             print("Returning from cache : " + cache_key)
 

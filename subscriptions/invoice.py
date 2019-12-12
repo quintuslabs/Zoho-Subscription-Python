@@ -1,5 +1,7 @@
+import ast
 import json
 
+from requests import HTTPError
 
 from client.client import Client
 
@@ -31,8 +33,13 @@ class Invoice:
         if response is None:
             invoices_by_customer_uri = 'invoices?customer_id=%s' % customer_id
             result = self.client.send_request("GET", invoices_by_customer_uri)
-            response = result['invoices']
-            self.client.add_to_cache(cache_key, response)
+            if type(result) is HTTPError:
+                result_bytes = result.response._content
+                result_dict = ast.literal_eval(result_bytes.decode('utf-8'))
+                return result_dict['message']
+            else:
+                response = result['invoices']
+                self.client.add_to_cache(cache_key, response)
         else:
             print("Returning from cache : " + cache_key)
         return response
@@ -43,16 +50,26 @@ class Invoice:
         if response is None:
             invoice_by_invoice_id_uri = 'invoices/%s'%invoice_id
             result = self.client.send_request("GET", invoice_by_invoice_id_uri)
-            response = result['invoice']
-            self.client.add_to_cache(cache_key, response)
+            if type(result) is HTTPError:
+                result_bytes = result.response._content
+                result_dict = ast.literal_eval(result_bytes.decode('utf-8'))
+                return result_dict['message']
+            else:
+                response = result['invoice']
+                self.client.add_to_cache(cache_key, response)
         else:
             print("Returning from cache : " + cache_key)
 
         return response
 
     def get_invoice_pdf(self,invoice_id):
-        data = {'query':{'accept':'pdf'}}
+        data = {'query': {'accept': 'pdf'}}
         invoice_pdf_by_invoice_id_uri = 'invoices/%s'%invoice_id
         headers = {"Accept": "application/pdf"}
-        return self.client.send_request("GET", invoice_pdf_by_invoice_id_uri,data=data, headers=headers)
+        result = self.client.send_request("GET", invoice_pdf_by_invoice_id_uri,data=data, headers=headers)
+        if type(result) is HTTPError:
+            result_bytes = result.response._content
+            result_dict = ast.literal_eval(result_bytes.decode('utf-8'))
+            return result_dict['message']
+        return result
 

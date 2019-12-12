@@ -1,3 +1,4 @@
+import ast
 import json
 
 from requests import HTTPError
@@ -81,7 +82,7 @@ class Subscription:
             response = result['subscriptions']
             self.client.add_to_cache(cache_key, response)
         else:
-            print ("Returning from cache : " + cache_key)
+            print("Returning from cache : " + cache_key)
         return response
 
     def get_subscriptions(self,subscription_id):
@@ -91,7 +92,9 @@ class Subscription:
             subscriptions_by_subscription_id_uri = 'subscriptions/%s'%subscription_id
             result = self.client.send_request("GET", subscriptions_by_subscription_id_uri)
             if type(result) is HTTPError:
-                response = None
+                result_bytes = result.response._content
+                result_dict = ast.literal_eval(result_bytes.decode('utf-8'))
+                return result_dict['message']
             else:
                 response = result['subscription']
                 self.client.add_to_cache(cache_key, response)

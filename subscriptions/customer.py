@@ -1,5 +1,9 @@
+import ast
 import hashlib
 import json
+
+from requests import HTTPError
+
 from client.client import Client
 
 try:
@@ -54,8 +58,13 @@ class Customer:
         if response is None:
             customer_by_customer_id_uri = 'customers/%s' % customer_id
             result = self.client.send_request("GET", customer_by_customer_id_uri)
-            response = result['customer']
-            self.client.add_to_cache(cache_key, response)
+            if type(result) is HTTPError:
+                result_bytes = result.response._content
+                result_dict = ast.literal_eval(result_bytes.decode('utf-8'))
+                return result_dict['message']
+            else:
+                response = result['customer']
+                self.client.add_to_cache(cache_key, response)
         else:
             print("Returning from cache : " + cache_key)
 
@@ -67,12 +76,16 @@ class Customer:
         headers = {'Content-type': 'application/json'}
         update_customer_by_customer_id = 'customers/%s' % customer_id
         result = self.client.send_request("PUT", update_customer_by_customer_id, data=data, headers=headers)
+        if type(result) is HTTPError:
+            result_bytes = result.response._content
+            result_dict = ast.literal_eval(result_bytes.decode('utf-8'))
+            return result_dict['message']
         if result['code'] == 0:
             customer_val = result['customer']
             response = self.delete_customer_cache(customer_val)
             return response
         else:
-            return False
+            return response
 
     def delete_customer_cache(self, customer_val):
         cache_key_by_id = 'zoho_customer_%s' % customer_val['customer_id']
@@ -82,13 +95,13 @@ class Customer:
     def create_customer(self, data):
         headers = {'Content-type': 'application/json'}
         result = self.client.send_request("POST", 'customers', data=data, headers=headers)
-        if result.response.status_code != 400:
+        if type(result) is HTTPError:
+            result_bytes = result.response._content
+            result_dict = ast.literal_eval(result_bytes.decode('utf-8'))
+            return result_dict['message']
+        else:
             if result.get('customer'):
                 customer = result['customer']
                 return customer
-            else:
-                return False
-        else:
-            return {"Message":f"User already exist {data}"}
 
 
