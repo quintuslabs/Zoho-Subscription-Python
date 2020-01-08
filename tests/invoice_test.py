@@ -9,4 +9,4 @@ invoices = Invoice()
 # print(invoices.get_invoice("2004477000000086003"))
 
 # Get Invoice pdf using invoice id.
-print(invoices.get_invoice_pdf("2004477000000086003"))
+# print(invoices.get_invoice_pdf("2004477000000086003"))

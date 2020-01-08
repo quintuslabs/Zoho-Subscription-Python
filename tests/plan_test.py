@@ -16,4 +16,4 @@ plan_api = Plan()
 
 
 # Get all addons for a plan
-print(plan_api.get_addons_for_plan("1100"))
+# print(plan_api.get_addons_for_plan("1100"))

@@ -6,7 +6,7 @@ addon_api = Addon()
 # print(addon_api.list_addons())
 
 # Plans with name or addon_code
-# print(addon_api.list_addons(filters={"name": "Channel", "addon_code": "1101"}))
+print(addon_api.list_addons(filters={"name": "", "addon_code": ""}))
 
 # Get addon with addon code
 # print(addon_api.get_addon(1101))

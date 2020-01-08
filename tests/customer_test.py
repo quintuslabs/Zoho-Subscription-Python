@@ -1,5 +1,4 @@
 from subscriptions.customer import Customer
-from subscriptions.plan import Plan
 
 customer_api = Customer()
 
@@ -13,7 +12,7 @@ customer_api = Customer()
 # print(customer_api.get_customer_by_id("2004477000000071072"))
 
 # Update customer
-print(customer_api.update_customer("2004477000000071072", data={"display_name": "quintus labs pvt.Ltd", 'email':'rosalin.d@wiseskool.com'}))
+# print(customer_api.update_customer("2004477000000071072", data={"display_name": "quintus labs pvt.Ltd", 'email':'rosalin.d@wiseskool.com'}))
 
 # Create Customer
 # print(customer_api.create_customer(data={'display_name': 'quintus1995', 'email': 'biswaji.bm@gmail.com'}))
